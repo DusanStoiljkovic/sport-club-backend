@@ -1,32 +1,45 @@
 package com.singidunum.sports_club_backend.controllers;
 
+import com.singidunum.sports_club_backend.entities.User;
+import com.singidunum.sports_club_backend.mappers.UserMapper;
 import com.singidunum.sports_club_backend.models.UserModel;
+import com.singidunum.sports_club_backend.models.UserPageModel;
+import com.singidunum.sports_club_backend.repositories.IUserRepository;
 import jakarta.validation.Valid;
+import org.hibernate.query.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("user")
 public class UserControllers {
-    @CrossOrigin("*")
-    @GetMapping
-    public UserModel getUser() {
-        return new UserModel();
+    private final IUserRepository userRepository;
+
+    public UserControllers(IUserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @CrossOrigin("*")
-    @GetMapping("get-first-name")
-    public String getFirstName() {
-        return "Dusan";
+    @GetMapping("get-user-page-list")
+    public UserPageModel getUserPageList(Integer pageNumber, Integer pageSize) {
+        return UserMapper.toPageModel(userRepository.findAll(PageRequest.of(pageNumber, pageSize)));
     }
 
+    @CrossOrigin("*")
     @PostMapping("create-user-body")
-    public ResponseEntity<?> createUserBody(@RequestBody @Valid UserModel user, BindingResult result) {
+    public ResponseEntity<?> createUserBody(@RequestBody @Valid UserModel userModel, BindingResult result) {
         if(result.hasErrors()) {
-            return new ResponseEntity<>("Neuspesno registrovan,", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Neuspesno registrovan!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<UserModel>(user, HttpStatus.CREATED);
+        var entity = UserMapper.toEntity(userModel);
+
+        userRepository.save(entity);
+
+        return new ResponseEntity<UserModel>(userModel, HttpStatus.CREATED);
     }
 }
