@@ -1,12 +1,9 @@
 package com.singidunum.sports_club_backend.controllers;
-
-import com.singidunum.sports_club_backend.entities.User;
 import com.singidunum.sports_club_backend.mappers.UserMapper;
 import com.singidunum.sports_club_backend.models.UserModel;
 import com.singidunum.sports_club_backend.models.UserPageModel;
 import com.singidunum.sports_club_backend.repositories.IUserRepository;
 import jakarta.validation.Valid;
-import org.hibernate.query.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +16,13 @@ import java.util.List;
 @RequestMapping("user")
 public class UserControllers {
     private final IUserRepository userRepository;
-
     public UserControllers(IUserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @GetMapping("get-user-list")
+    public List<UserModel> getUserList() {
+        return UserMapper.toModelList(userRepository.findAll());
     }
 
     @CrossOrigin("*")

@@ -10,6 +10,6 @@ import java.util.List;
 public interface IUserRepository extends JpaRepository<User, Integer> {
     User findByEmail(String email);
 
-    @Query(nativeQuery=true, value="SELECT * FROM `sport-club`.user WHERE first_name = :firstName")
+    @Query(nativeQuery=true, value="SELECT * FROM `sport-club`.users WHERE first_name = :firstName")
     List<User> findAllByFirstName(@Param("firstName") String firstName);
 }

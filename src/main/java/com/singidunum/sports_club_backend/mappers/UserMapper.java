@@ -1,5 +1,6 @@
 package com.singidunum.sports_club_backend.mappers;
 
+import com.singidunum.sports_club_backend.entities.Product;
 import com.singidunum.sports_club_backend.entities.User;
 import com.singidunum.sports_club_backend.models.UserModel;
 import com.singidunum.sports_club_backend.models.UserPageModel;
@@ -14,7 +15,9 @@ public class UserMapper {
                 .id(entity.getId())
                 .email(entity.getEmail())
                 .firstName(entity.getFirstName())
-                .lastName(entity.getLastName()).build();
+                .lastName(entity.getLastName())
+                .products(ProductMapper.toModelList(entity.getProducts()))
+                .build();
     }
 
     public static List<UserModel> toModelList(List<User> entities) {
