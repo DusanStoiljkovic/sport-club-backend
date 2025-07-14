@@ -3,7 +3,10 @@ import com.singidunum.sports_club_backend.mappers.UserMapper;
 import com.singidunum.sports_club_backend.models.UserModel;
 import com.singidunum.sports_club_backend.models.UserPageModel;
 import com.singidunum.sports_club_backend.repositories.IUserRepository;
+import com.singidunum.sports_club_backend.services.IUserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,33 +17,25 @@ import java.util.List;
 
 @RestController
 @RequestMapping("user")
+@RequiredArgsConstructor
 public class UserControllers {
-    private final IUserRepository userRepository;
-    public UserControllers(IUserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final IUserService userService;
 
-    @GetMapping("get-user-list")
+    @GetMapping("get-list")
     public List<UserModel> getUserList() {
-        return UserMapper.toModelList(userRepository.findAll());
+        return userService.findAll();
     }
 
-    @CrossOrigin("*")
-    @GetMapping("get-user-page-list")
+    @GetMapping("get-page-list")
     public UserPageModel getUserPageList(Integer pageNumber, Integer pageSize) {
-        return UserMapper.toPageModel(userRepository.findAll(PageRequest.of(pageNumber, pageSize)));
+        return userService.findAll(pageNumber, pageSize);
     }
 
-    @CrossOrigin("*")
-    @PostMapping("create-user-body")
-    public ResponseEntity<?> createUserBody(@RequestBody @Valid UserModel userModel, BindingResult result) {
+    @PostMapping("create")
+    public ResponseEntity<?> create(@RequestBody @Valid UserModel userModel, BindingResult result) {
         if(result.hasErrors()) {
             return new ResponseEntity<>("Neuspesno registrovan!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        var entity = UserMapper.toEntity(userModel);
-
-        userRepository.save(entity);
-
-        return new ResponseEntity<UserModel>(userModel, HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.create(userModel), HttpStatus.CREATED);
     }
 }

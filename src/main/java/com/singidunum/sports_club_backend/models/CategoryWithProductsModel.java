@@ -7,7 +7,8 @@ import java.util.List;
 
 @Data
 @Builder
-public class ProductModel {
-    private int id;
+public class CategoryWithProductsModel {
+    private Integer id;
     private String name;
+    private List<ProductModel> products;
 }

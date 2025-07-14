@@ -18,5 +18,10 @@ public class Product {
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
-
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "product_categories",
+            joinColumns = @JoinColumn(name="product_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name="category_id", referencedColumnName = "id"))
+    @JsonManagedReference
+    private List<Category> categories;
 }

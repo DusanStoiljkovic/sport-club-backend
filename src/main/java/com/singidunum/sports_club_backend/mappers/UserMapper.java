@@ -1,6 +1,5 @@
 package com.singidunum.sports_club_backend.mappers;
 
-import com.singidunum.sports_club_backend.entities.Product;
 import com.singidunum.sports_club_backend.entities.User;
 import com.singidunum.sports_club_backend.models.UserModel;
 import com.singidunum.sports_club_backend.models.UserPageModel;
@@ -38,10 +37,10 @@ public class UserMapper {
 
     public static User toEntity(UserModel model) {
         User user = new User();
-        user.setId(model.getId());
         user.setFirstName(model.getFirstName());
         user.setLastName(model.getLastName());
         user.setEmail(model.getEmail());
+        user.setProducts(ProductMapper.toEntityList(model.getProducts()));
         return user;
 
     }

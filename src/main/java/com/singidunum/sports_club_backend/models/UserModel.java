@@ -15,8 +15,11 @@ import java.util.List;
 @Builder
 public class UserModel {
     private int id;
+    @NotBlank
     private String firstName;
+    @NotBlank
     private String lastName;
+    @Email
     private String email;
     private List<ProductModel> products;
 }
