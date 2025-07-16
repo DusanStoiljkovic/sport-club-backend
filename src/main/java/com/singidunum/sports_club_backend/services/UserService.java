@@ -33,4 +33,11 @@ public class UserService implements IUserService {
     public UserModel create(UserModel userModel) {
         return UserMapper.toModel(userRepository.save(UserMapper.toEntity(userModel)));
     }
+
+    @Override
+    public UserModel update(UserModel userModel) {
+        var entity = UserMapper.toEntity(userModel);
+        var result = userRepository.save(entity);
+        return UserMapper.toModel(result);
+    }
 }

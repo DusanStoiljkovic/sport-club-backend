@@ -15,6 +15,7 @@ public class UserMapper {
                 .email(entity.getEmail())
                 .firstName(entity.getFirstName())
                 .lastName(entity.getLastName())
+                .contactNumber(entity.getContactNumber())
                 .products(ProductMapper.toModelList(entity.getProducts()))
                 .build();
     }
@@ -37,9 +38,11 @@ public class UserMapper {
 
     public static User toEntity(UserModel model) {
         User user = new User();
+        user.setId(model.getId());
         user.setFirstName(model.getFirstName());
         user.setLastName(model.getLastName());
         user.setEmail(model.getEmail());
+        user.setContactNumber(model.getContactNumber());
         user.setProducts(
                 model.getProducts() != null
                 ? ProductMapper.toEntityList(model.getProducts())
