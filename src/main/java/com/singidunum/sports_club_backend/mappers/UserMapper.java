@@ -40,7 +40,11 @@ public class UserMapper {
         user.setFirstName(model.getFirstName());
         user.setLastName(model.getLastName());
         user.setEmail(model.getEmail());
-        user.setProducts(ProductMapper.toEntityList(model.getProducts()));
+        user.setProducts(
+                model.getProducts() != null
+                ? ProductMapper.toEntityList(model.getProducts())
+                : new ArrayList<>()
+        );
         return user;
 
     }
