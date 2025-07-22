@@ -1,9 +1,11 @@
 package com.singidunum.sports_club_backend.mappers;
 
 import com.singidunum.sports_club_backend.entities.User;
+import com.singidunum.sports_club_backend.models.RegisterUserModel;
 import com.singidunum.sports_club_backend.models.UserModel;
 import com.singidunum.sports_club_backend.models.UserPageModel;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,7 @@ public class UserMapper {
                 .firstName(entity.getFirstName())
                 .lastName(entity.getLastName())
                 .contactNumber(entity.getContactNumber())
-                .products(ProductMapper.toModelList(entity.getProducts()))
+                //.products(ProductMapper.toModelList(entity.getProducts()))
                 .build();
     }
 
@@ -49,6 +51,12 @@ public class UserMapper {
                 : new ArrayList<>()
         );
         return user;
+    }
 
+    public static User toEntity(RegisterUserModel model, PasswordEncoder passwordEncoder) {
+        User user = new User();
+        user.setEmail(model.getEmail());
+        user.setPassword(passwordEncoder.encode(model.getPassword()));
+        return user;
     }
 }

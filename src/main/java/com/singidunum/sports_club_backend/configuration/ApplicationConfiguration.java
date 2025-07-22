@@ -17,17 +17,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class ApplicationConfiguration {
     private final IUserRepository userRepository;
 
-    @Autowired
     public ApplicationConfiguration(IUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Bean
     UserDetailsService userDetailsService() {
-        return username -> {
-            return userRepository.findByEmail(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        };
+        return username -> userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Bean
@@ -36,7 +33,7 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
@@ -49,6 +46,4 @@ public class ApplicationConfiguration {
 
         return authProvider;
     }
-
-
 }
