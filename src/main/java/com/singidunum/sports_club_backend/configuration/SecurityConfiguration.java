@@ -1,5 +1,6 @@
 package com.singidunum.sports_club_backend.configuration;
 
+import com.singidunum.sports_club_backend.constants.RoleConstants;
 import com.singidunum.sports_club_backend.filters.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -37,7 +38,9 @@ public class SecurityConfiguration {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/auth/**")
+                .permitAll()
+                .requestMatchers("/user/get-page-list").hasAnyRole(RoleConstants.EMPLOYEE)
                 //.requestMatchers("/user/**").hasAnyRole(RoleConstants.ADMINISTRATOR)
                 //.requestMatchers("/popis/**").hasAnyRole(RoleConstants.EMPLOYEE)
                 //.requestMatchers("/popis-stavka/**").hasAnyRole(RoleConstants.EMPLOYEE)

@@ -32,9 +32,4 @@ public class AuthenticationController {
     public ResponseEntity<?> authenticate(@RequestBody LoginUserModel model) {
         return ResponseEntity.ok(authenticationService.authenticate(model));
     }
-
-//    @PostMapping("/refresh-token")
-//    public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
-//        return ResponseEntity.ok(authenticationService.refreshToken(request, response));
-//    }
 }

@@ -1,5 +1,6 @@
 package com.singidunum.sports_club_backend.services;
 
+import com.singidunum.sports_club_backend.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -24,7 +25,11 @@ public class JwtService {
     private long jwtExpiration;
 
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        return extractAllClaims(token).getSubject();
+    }
+
+    public String extractRole(String token) {
+        return extractAllClaims(token).get("role", String.class);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -32,12 +37,21 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(User userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("id", userDetails.getId());
+        claims.put("email", userDetails.getEmail());
+        claims.put("firstName", userDetails.getFirstName());
+        claims.put("lastName", userDetails.getLastName());
+        claims.put("contactNumber", userDetails.getContactNumber());
+        claims.put("roles", userDetails.getAuthorities());
+
+        return generateToken(claims, userDetails.getEmail());
     }
 
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, jwtExpiration);
+    public String generateToken(Map<String, Object> extraClaims, String jwtSubject) {
+        return buildToken(extraClaims, jwtSubject, jwtExpiration);
     }
 
     public long getExpirationTime(String token) {
@@ -46,13 +60,13 @@ public class JwtService {
 
     public String buildToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails,
+            String jwtSubject,
             long expiration
     ) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
+                .setSubject(jwtSubject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
